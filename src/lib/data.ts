@@ -56,13 +56,14 @@ export const EXPERIENCE = [
     ],
   },
   {
-    role: "Student Council Member",
+    role: "Student Council Member / Acting Department Lead",
     org: "School of Computing, Kyung Hee University",
     period: "January 2025 – December 2025",
     activities: [
-      "Proposed and managed partnership opportunities with multiple vendors and external companies",
-      "Planned and operated student-facing events for the School of Computing",
-      "Coordinated communication between students, school offices, and partner organizations",
+      "Secured and managed nearly 20 partnerships with vendors and external companies through outreach, proposals, and follow-up communication",
+      "Served as acting department lead near the end of the second semester, coordinating event planning and execution",
+      "Planned and operated student-facing events while aligning schedules, partner benefits, budgets, and on-site operations",
+      "Coordinated between students, school offices, and partner organizations to turn partnership ideas into executable programs",
     ],
   },
   {
