@@ -11,6 +11,7 @@ import {
   fallbackPerson,
   fallbackWorks,
 } from "@/lib/fallbackPortfolio";
+import { LanguageToggle, pick, tagText, text, useLanguage } from "@/lib/language";
 
 const ALL_TAGS = ["ALL", "RESEARCH", "STUDY", "NOTES", "AWARD"];
 
@@ -33,6 +34,7 @@ export default function WorksList() {
   const [activeTag, setActiveTag] = useState("ALL");
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { language } = useLanguage();
 
   useReveal();
 
@@ -51,8 +53,8 @@ export default function WorksList() {
 
   const nameEn = person?.nameEn || "Kim Sihwan";
   const nameParts = nameEn.split(" ");
-  const lab = person?.lab || "KDST Lab";
-  const affiliation = person?.affiliation || "Kyung Hee University";
+  const lab = pick(person, "lab", language) || "KDST Lab";
+  const affiliation = pick(person, "affiliation", language) || "Kyung Hee University";
 
   const filtered = activeTag === "ALL"
     ? (works as any[])
@@ -98,17 +100,20 @@ export default function WorksList() {
             {nameParts[0]?.toLowerCase()} {nameParts[1]?.toLowerCase()}
           </span>
         </Link>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.68rem",
-            color: "rgba(255,255,255,0.4)",
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-          }}
-        >
-          ALL WORKS
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <span
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.68rem",
+              color: "rgba(255,255,255,0.4)",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+          >
+            {text(language, "ALL WORKS", "전체 작업")}
+          </span>
+          <LanguageToggle variant="dark" />
+        </div>
       </header>
 
       {/* Page header */}
@@ -142,7 +147,7 @@ export default function WorksList() {
               marginBottom: "1rem",
             }}
           >
-            Works
+            {text(language, "Works", "작업")}
           </h1>
           <p
             style={{
@@ -153,7 +158,11 @@ export default function WorksList() {
               maxWidth: "480px",
             }}
           >
-            Research projects, study notes, and experiments — a record of how I spend my time thinking about AI.
+            {text(
+              language,
+              "Research projects, study notes, and experiments — a record of how I spend my time thinking about AI.",
+              "연구 프로젝트, 스터디 노트, 실험 기록을 모은 아카이브입니다."
+            )}
           </p>
         </div>
       </div>
@@ -192,7 +201,7 @@ export default function WorksList() {
                 transition: "color 0.2s",
               }}
             >
-              {tag}
+              {tagText(tag, language)}
               <span
                 style={{
                   marginLeft: "0.4rem",
@@ -228,7 +237,7 @@ export default function WorksList() {
             marginBottom: "0",
           }}
         >
-          {["NO.", "TITLE", "AREA", "DATE", "STATUS"].map((col) => (
+          {(language === "ko" ? ["번호", "제목", "분야", "기간", "상태"] : ["NO.", "TITLE", "AREA", "DATE", "STATUS"]).map((col) => (
             <span
               key={col}
               style={{
@@ -294,7 +303,7 @@ export default function WorksList() {
                     gap: "0.4rem",
                   }}
                 >
-                  {(work as any).title}
+                  {pick(work, "title", language)}
                   <ExternalLink
                     size={11}
                     style={{
@@ -313,7 +322,7 @@ export default function WorksList() {
                     lineHeight: 1.5,
                   }}
                 >
-                  {(work as any).subtitle}
+                  {pick(work, "subtitle", language)}
                 </div>
               </div>
 
@@ -328,7 +337,7 @@ export default function WorksList() {
                   lineHeight: 1.5,
                 }}
               >
-                {(work as any).area}
+                {pick(work, "area", language)}
               </div>
 
               {/* Date */}
@@ -341,7 +350,7 @@ export default function WorksList() {
                   alignSelf: "center",
                 }}
               >
-                {(work as any).date}
+                {pick(work, "date", language)}
               </div>
 
               {/* Status */}
@@ -370,7 +379,7 @@ export default function WorksList() {
                     textTransform: "uppercase",
                   }}
                 >
-                  {(work as any).status}
+                  {pick(work, "status", language)}
                 </span>
               </div>
             </div>
@@ -387,7 +396,7 @@ export default function WorksList() {
               color: "rgba(26,20,16,0.4)",
             }}
           >
-            No works in this category yet.
+            {text(language, "No works in this category yet.", "아직 이 분류의 작업이 없습니다.")}
           </div>
         )}
       </div>
@@ -408,7 +417,7 @@ export default function WorksList() {
         >
           <img
             src={(hoveredWork as any).img}
-            alt={(hoveredWork as any).title}
+            alt={pick(hoveredWork, "title", language)}
             style={{
               width: "100%",
               height: "140px",
@@ -430,7 +439,7 @@ export default function WorksList() {
                 letterSpacing: "0.04em",
               }}
             >
-              {(hoveredWork as any).tag} · {(hoveredWork as any).date}
+              {pick(hoveredWork, "tag", language) ?? tagText((hoveredWork as any).tag, language)} · {pick(hoveredWork, "date", language)}
             </div>
           </div>
         </div>

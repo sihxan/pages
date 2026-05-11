@@ -17,6 +17,7 @@ import {
   fallbackSkillGroups,
   fallbackWorks,
 } from "@/lib/fallbackPortfolio";
+import { LanguageToggle, pick, pickArray, tagText, text, useLanguage } from "@/lib/language";
 
 const IMG_FILM_STRIP = "https://d2xsxph8kpxj0f.cloudfront.net/310519663642895111/7Z7P982mkUA4XH57GZYEhs/field-notes-strip-e6SQdXgyxVXtTyPPN9sd69.webp";
 const HERO_BG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663642895111/7Z7P982mkUA4XH57GZYEhs/hero-bg-AvX6JHBH7zMKhpUCg8yYVk.webp";
@@ -41,6 +42,7 @@ function useReveal() {
 function Nav({ nameEn }: { nameEn: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { language } = useLanguage();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -48,7 +50,13 @@ function Nav({ nameEn }: { nameEn: string }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const navItems = ["WORKS", "ABOUT", "NOTES", "LAB", "CONTACT"];
+  const navItems = [
+    { id: "works", label: text(language, "WORKS", "작업") },
+    { id: "about", label: text(language, "ABOUT", "소개") },
+    { id: "notes", label: text(language, "NOTES", "경험") },
+    { id: "lab", label: text(language, "LAB", "스킬") },
+    { id: "contact", label: text(language, "CONTACT", "연락") },
+  ];
   const parts = nameEn.split(" ");
   const scrollToSection = (sectionId: string) => {
     const target = document.getElementById(sectionId);
@@ -93,11 +101,11 @@ function Nav({ nameEn }: { nameEn: string }) {
         <span style={{ color: "#facc15", fontSize: "0.45rem" }}>●</span>
         {navItems.map((item) => (
           <a
-            key={item}
-            href={`#/${item.toLowerCase()}`}
+            key={item.id}
+            href={`#/${item.id}`}
             onClick={(e) => {
               e.preventDefault();
-              scrollToSection(item.toLowerCase());
+              scrollToSection(item.id);
             }}
             style={{
               fontFamily: "var(--font-mono)",
@@ -110,35 +118,39 @@ function Nav({ nameEn }: { nameEn: string }) {
             onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "white")}
             onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.75)")}
           >
-            {item}
+            {item.label}
           </a>
         ))}
+        <LanguageToggle variant="dark" />
       </div>
 
-      <button
-        className="md:hidden flex flex-col gap-1.5 p-1"
-        onClick={() => setMenuOpen(!menuOpen)}
-        style={{ background: "none", border: "none" }}
-      >
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            style={{
-              display: "block",
-              width: "22px",
-              height: "1.5px",
-              backgroundColor: "white",
-              transition: "transform 0.3s",
-              transform:
-                menuOpen
-                  ? i === 0 ? "rotate(45deg) translateY(6px)"
-                  : i === 1 ? "scaleX(0)"
-                  : "rotate(-45deg) translateY(-6px)"
-                  : "none",
-            }}
-          />
-        ))}
-      </button>
+      <div className="md:hidden flex items-center gap-2">
+        <LanguageToggle variant="dark" />
+        <button
+          className="flex flex-col gap-1.5 p-1"
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{ background: "none", border: "none" }}
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              style={{
+                display: "block",
+                width: "22px",
+                height: "1.5px",
+                backgroundColor: "white",
+                transition: "transform 0.3s",
+                transform:
+                  menuOpen
+                    ? i === 0 ? "rotate(45deg) translateY(6px)"
+                    : i === 1 ? "scaleX(0)"
+                    : "rotate(-45deg) translateY(-6px)"
+                    : "none",
+              }}
+            />
+          ))}
+        </button>
+      </div>
 
       {menuOpen && (
         <div
@@ -147,12 +159,12 @@ function Nav({ nameEn }: { nameEn: string }) {
         >
           {navItems.map((item) => (
             <a
-              key={item}
-              href={`#/${item.toLowerCase()}`}
+              key={item.id}
+              href={`#/${item.id}`}
               onClick={(e) => {
                 e.preventDefault();
                 setMenuOpen(false);
-                scrollToSection(item.toLowerCase());
+                scrollToSection(item.id);
               }}
               style={{
                 fontFamily: "var(--font-mono)",
@@ -164,7 +176,7 @@ function Nav({ nameEn }: { nameEn: string }) {
                 borderBottom: "1px solid rgba(255,255,255,0.06)",
               }}
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </div>
@@ -275,6 +287,7 @@ function HeroSection({ heroCopy }: { heroCopy: string[] }) {
 // ── Works ────────────────────────────────────────────────────
 function WorksSection({ works }: { works: any[] }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const { language } = useLanguage();
 
   return (
     <section
@@ -313,7 +326,7 @@ function WorksSection({ works }: { works: any[] }) {
               margin: 0,
             }}
           >
-            WORKS
+            {text(language, "WORKS", "작업")}
           </h2>
           <Link href="/works">
             <span
@@ -333,7 +346,7 @@ function WorksSection({ works }: { works: any[] }) {
               onMouseEnter={(e) => ((e.currentTarget as HTMLSpanElement).style.opacity = "1")}
               onMouseLeave={(e) => ((e.currentTarget as HTMLSpanElement).style.opacity = "0.65")}
             >
-              VIEW ALL <ArrowRight size={11} />
+              {text(language, "VIEW ALL", "전체 보기")} <ArrowRight size={11} />
             </span>
           </Link>
         </div>
@@ -378,7 +391,7 @@ function WorksSection({ works }: { works: any[] }) {
                 >
                   <img
                     src={work.img}
-                    alt={work.title}
+                    alt={pick(work, "title", language)}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -430,7 +443,7 @@ function WorksSection({ works }: { works: any[] }) {
                       lineHeight: 1.35,
                     }}
                   >
-                    {work.title}
+                    {pick(work, "title", language)}
                   </h3>
                   <p
                     style={{
@@ -441,7 +454,7 @@ function WorksSection({ works }: { works: any[] }) {
                       marginBottom: "0.65rem",
                     }}
                   >
-                    {work.desc}
+                    {pick(work, "desc", language)}
                   </p>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <span
@@ -457,7 +470,7 @@ function WorksSection({ works }: { works: any[] }) {
                         textTransform: "uppercase",
                       }}
                     >
-                      {work.tag}
+                      {pick(work, "tag", language) ?? tagText(work.tag, language)}
                     </span>
                     <span
                       style={{
@@ -467,7 +480,7 @@ function WorksSection({ works }: { works: any[] }) {
                         letterSpacing: "0.04em",
                       }}
                     >
-                      {work.date}
+                      {pick(work, "date", language)}
                     </span>
                   </div>
                 </div>
@@ -482,6 +495,8 @@ function WorksSection({ works }: { works: any[] }) {
 
 // ── About + Field Note ────────────────────────────────────────
 function AboutSection({ person }: { person: any }) {
+  const { language } = useLanguage();
+
   return (
     <section id="about" style={{ backgroundColor: "#e8e0d0" }}>
       <div
@@ -518,7 +533,7 @@ function AboutSection({ person }: { person: any }) {
                 marginBottom: "1.75rem",
               }}
             >
-              ABOUT
+              {text(language, "ABOUT", "소개")}
             </div>
 
             {/* Name */}
@@ -564,11 +579,11 @@ function AboutSection({ person }: { person: any }) {
                   margin: 0,
                 }}
               >
-                {person.lab}
+                {pick(person, "lab", language)}
                 <br />
-                <span style={{ opacity: 0.55, fontSize: "0.65rem" }}>{person.department}</span>
+                <span style={{ opacity: 0.55, fontSize: "0.65rem" }}>{pick(person, "department", language)}</span>
                 <br />
-                <span style={{ opacity: 0.55, fontSize: "0.65rem" }}>{person.affiliation} · {person.location}</span>
+                <span style={{ opacity: 0.55, fontSize: "0.65rem" }}>{pick(person, "affiliation", language)} · {pick(person, "location", language)}</span>
               </p>
             </div>
 
@@ -581,7 +596,7 @@ function AboutSection({ person }: { person: any }) {
                 marginBottom: "1rem",
               }}
             >
-              {(Array.isArray(person.about) ? person.about as string[] : []).map((line: string, i: number) =>
+              {pickArray(person, "about", language).map((line: string, i: number) =>
                 line === "" ? <br key={i} /> : <span key={i}>{line}<br /></span>
               )}
             </p>
@@ -619,7 +634,7 @@ function AboutSection({ person }: { person: any }) {
               onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.7")}
               onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")}
             >
-              more about me →
+              {text(language, "more about me", "더 보기")} →
             </a>
             <Star size={18} style={{ color: "rgba(255,255,255,0.2)", strokeWidth: 1.5 }} />
           </div>
@@ -665,7 +680,7 @@ function AboutSection({ person }: { person: any }) {
                 textTransform: "uppercase",
               }}
             >
-              FIELD NOTE
+              {text(language, "FIELD NOTE", "필드 노트")}
             </span>
             <span
               style={{
@@ -690,7 +705,7 @@ function AboutSection({ person }: { person: any }) {
               whiteSpace: "pre-line",
             }}
           >
-            {person.fieldNote}
+            {pick(person, "fieldNote", language)}
           </p>
 
           {/* Film strip */}
@@ -725,6 +740,7 @@ function ResearchSection({
   researchInterests: any[];
   person: any;
 }) {
+  const { language } = useLanguage();
   const [openExperienceIds, setOpenExperienceIds] = useState<Set<number>>(
     () => new Set()
   );
@@ -773,7 +789,7 @@ function ResearchSection({
                 marginBottom: "1.75rem",
               }}
             >
-              EXPERIENCE
+              {text(language, "EXPERIENCE", "경험")}
             </h2>
 
             {experience.map((exp: any, i: number) => {
@@ -822,7 +838,7 @@ function ResearchSection({
                           marginBottom: "0.2rem",
                         }}
                       >
-                        {exp.role}
+                        {pick(exp, "role", language)}
                       </span>
                       <span
                         style={{
@@ -834,7 +850,7 @@ function ResearchSection({
                           letterSpacing: "0.02em",
                         }}
                       >
-                        {exp.org}
+                        {pick(exp, "org", language)}
                       </span>
                       <span
                         style={{
@@ -846,7 +862,7 @@ function ResearchSection({
                           letterSpacing: "0.04em",
                         }}
                       >
-                        {exp.period}
+                        {pick(exp, "period", language)}
                       </span>
                     </span>
                     <ChevronDown
@@ -881,12 +897,12 @@ function ResearchSection({
                             borderBottom: "1px solid rgba(26,58,143,0.35)",
                           }}
                         >
-                          Visit {exp.org}
+                          {text(language, "Visit", "방문하기")} {pick(exp, "org", language)}
                           <ExternalLink size={11} aria-hidden="true" />
                         </a>
                       )}
                       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                        {(Array.isArray(exp.activities) ? exp.activities as string[] : []).map((act: string, j: number) => (
+                        {pickArray(exp, "activities", language).map((act: string, j: number) => (
                           <li
                             key={j}
                             style={{
@@ -926,7 +942,7 @@ function ResearchSection({
                   opacity: 0.6,
                 }}
               >
-                EDUCATION
+                {text(language, "EDUCATION", "학력")}
               </h3>
               {education.map((edu: any, i: number) => (
                 <div key={i}>
@@ -939,7 +955,7 @@ function ResearchSection({
                       marginBottom: "0.15rem",
                     }}
                   >
-                    {edu.school}
+                    {pick(edu, "school", language)}
                   </div>
                   <div
                     style={{
@@ -950,9 +966,9 @@ function ResearchSection({
                       lineHeight: 1.6,
                     }}
                   >
-                    {edu.dept} · {edu.major}
+                    {pick(edu, "dept", language)} · {pick(edu, "major", language)}
                     <br />
-                    {edu.period}
+                    {pick(edu, "period", language)}
                   </div>
                 </div>
               ))}
@@ -972,7 +988,7 @@ function ResearchSection({
                   opacity: 0.6,
                 }}
               >
-                ACHIEVEMENTS
+                {text(language, "ACHIEVEMENTS", "수상/자격")}
               </h3>
               {achievements.map((ach: any, i: number) => (
                 <div key={i} style={{ marginBottom: "0.75rem" }}>
@@ -994,7 +1010,7 @@ function ResearchSection({
                         borderBottom: "1px solid rgba(26,20,16,0.25)",
                       }}
                     >
-                      {ach.title}
+                      {pick(ach, "title", language)}
                       <ExternalLink size={11} aria-hidden="true" />
                     </a>
                   ) : (
@@ -1007,7 +1023,7 @@ function ResearchSection({
                         marginBottom: "0.1rem",
                       }}
                     >
-                      {ach.title}
+                      {pick(ach, "title", language)}
                     </div>
                   )}
                   <div
@@ -1018,7 +1034,7 @@ function ResearchSection({
                       opacity: 0.6,
                     }}
                   >
-                    {ach.event} · {ach.year}
+                    {pick(ach, "event", language)} · {pick(ach, "year", language)}
                   </div>
                 </div>
               ))}
@@ -1038,7 +1054,7 @@ function ResearchSection({
                 marginBottom: "1.75rem",
               }}
             >
-              RESEARCH INTERESTS
+              {text(language, "RESEARCH INTERESTS", "연구 관심사")}
             </h2>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "2.5rem" }}>
@@ -1065,7 +1081,7 @@ function ResearchSection({
                     (e.currentTarget as HTMLSpanElement).style.color = "#1a1410";
                   }}
                 >
-                  {item.name}
+                  {pick(item, "name", language)}
                 </span>
               ))}
             </div>
@@ -1096,7 +1112,7 @@ function ResearchSection({
                     textTransform: "uppercase",
                   }}
                 >
-                  RESEARCH IDENTITY
+                  {text(language, "RESEARCH IDENTITY", "연구 정체성")}
                 </span>
                 <span
                   style={{
@@ -1107,7 +1123,7 @@ function ResearchSection({
                     textTransform: "uppercase",
                   }}
                 >
-                  FIELD STATEMENT
+                  {text(language, "FIELD STATEMENT", "연구 문장")}
                 </span>
               </div>
               <p
@@ -1120,7 +1136,7 @@ function ResearchSection({
                   margin: 0,
                 }}
               >
-                "{person.aboutLong}"
+                &quot;{pick(person, "aboutLong", language)}&quot;
               </p>
             </div>
           </div>
@@ -1132,6 +1148,8 @@ function ResearchSection({
 
 // ── Skills + Contact ──────────────────────────────────────────
 function SkillsContactSection({ skillGroups, person }: { skillGroups: any[]; person: any }) {
+  const { language } = useLanguage();
+
   return (
     <section
       id="lab"
@@ -1165,7 +1183,7 @@ function SkillsContactSection({ skillGroups, person }: { skillGroups: any[]; per
               marginBottom: "1.5rem",
             }}
           >
-            SKILLS &amp; TOOLS
+            {text(language, "SKILLS & TOOLS", "스킬 & 도구")}
           </h2>
 
           {skillGroups.map((group: any) => (
@@ -1181,7 +1199,7 @@ function SkillsContactSection({ skillGroups, person }: { skillGroups: any[]; per
                   marginBottom: "0.6rem",
                 }}
               >
-                {group.label}
+                {pick(group, "label", language)}
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
                 {(group.items || []).map((skill: any) => (
@@ -1233,7 +1251,7 @@ function SkillsContactSection({ skillGroups, person }: { skillGroups: any[]; per
               marginBottom: "1.5rem",
             }}
           >
-            CONTACT
+            {text(language, "CONTACT", "연락처")}
           </div>
 
           <p
@@ -1245,9 +1263,9 @@ function SkillsContactSection({ skillGroups, person }: { skillGroups: any[]; per
               marginBottom: "1rem",
             }}
           >
-            Let's build something
+            {text(language, "Let's build something", "함께 의미 있는 것을")}
             <br />
-            meaningful together.
+            {text(language, "meaningful together.", "만들어가고 싶습니다.")}
           </p>
 
           <div
@@ -1330,6 +1348,8 @@ function SkillsContactSection({ skillGroups, person }: { skillGroups: any[]; per
 
 // ── Footer ────────────────────────────────────────────────────
 function Footer({ person }: { person: any }) {
+  const { language } = useLanguage();
+
   return (
     <footer
       style={{
@@ -1356,7 +1376,7 @@ function Footer({ person }: { person: any }) {
       <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
         {[
           { label: "GITHUB", href: person.github, Icon: Github },
-          { label: "EMAIL", href: `mailto:${person.email}`, Icon: Mail },
+          { label: text(language, "EMAIL", "메일"), href: `mailto:${person.email}`, Icon: Mail },
         ].map(({ label, href, Icon }) => (
           <a
             key={label}
@@ -1387,6 +1407,7 @@ function Footer({ person }: { person: any }) {
 // ── Main Export ───────────────────────────────────────────────
 export default function Home() {
   useReveal();
+  const { language } = useLanguage();
 
   const person = fallbackPerson;
   const works = fallbackWorks;
@@ -1395,7 +1416,7 @@ export default function Home() {
   const experience = fallbackExperience;
   const education = fallbackEducation;
   const achievements = fallbackAchievements;
-  const heroCopy = Array.isArray(person.heroCopy) ? person.heroCopy as string[] : [];
+  const heroCopy = pickArray(person, "heroCopy", language);
 
   return (
     <div style={{ backgroundColor: "#e8e0d0", minHeight: "100vh" }}>

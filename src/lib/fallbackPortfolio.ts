@@ -4,6 +4,7 @@ import {
   EXPERIENCE,
   PERSON,
   RESEARCH_INTERESTS,
+  RESEARCH_INTERESTS_KO,
   SKILLS_GROUPS,
   WORKS,
 } from "./data";
@@ -48,6 +49,7 @@ export const fallbackResearchInterests = RESEARCH_INTERESTS.map(
   (name, index) => ({
     id: index + 1,
     name,
+    nameKo: RESEARCH_INTERESTS_KO[index] ?? name,
     sortOrder: index + 1,
   })
 );

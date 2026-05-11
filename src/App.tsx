@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import WorkDetail from "./pages/WorkDetail";
 import WorksList from "./pages/WorksList";
+import { LanguageProvider } from "@/lib/language";
 
 function Routes() {
   return (
@@ -19,8 +20,10 @@ function Routes() {
 
 export default function App() {
   return (
-    <Router hook={useHashLocation}>
-      <Routes />
-    </Router>
+    <LanguageProvider>
+      <Router hook={useHashLocation}>
+        <Routes />
+      </Router>
+    </LanguageProvider>
   );
 }

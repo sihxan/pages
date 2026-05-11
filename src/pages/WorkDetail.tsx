@@ -11,6 +11,7 @@ import {
   fallbackPerson,
   fallbackWorks,
 } from "@/lib/fallbackPortfolio";
+import { LanguageToggle, pick, pickArray, tagText, text, useLanguage } from "@/lib/language";
 
 function useReveal() {
   useEffect(() => {
@@ -29,6 +30,7 @@ function useReveal() {
 
 export default function WorkDetail() {
   const { slug } = useParams<{ slug: string }>();
+  const { language } = useLanguage();
   useReveal();
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function WorkDetail() {
         }}
       >
         <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "#1a1410" }}>
-          Work not found.
+          {text(language, "Work not found.", "작업을 찾을 수 없습니다.")}
         </p>
         <Link href="/">
           <span
@@ -68,7 +70,7 @@ export default function WorkDetail() {
               cursor: "pointer",
             }}
           >
-            <ArrowLeft size={13} /> Back to home
+            <ArrowLeft size={13} /> {text(language, "Back to home", "홈으로")}
           </span>
         </Link>
       </div>
@@ -79,8 +81,8 @@ export default function WorkDetail() {
   const prevWork = currentIndex > 0 ? (allWorks as any[])[currentIndex - 1] : null;
   const nextWork = currentIndex < (allWorks as any[]).length - 1 ? (allWorks as any[])[currentIndex + 1] : null;
 
-  const highlights = Array.isArray((work as any).highlights) ? (work as any).highlights as string[] : [];
-  const keywords = Array.isArray((work as any).keywords) ? (work as any).keywords as string[] : [];
+  const highlights = pickArray(work, "highlights", language);
+  const keywords = pickArray(work, "keywords", language);
   const nameEn = person?.nameEn || "Kim Sihwan";
   const lab = person?.lab || "KDST Lab";
   const nameParts = nameEn.split(" ");
@@ -124,24 +126,27 @@ export default function WorkDetail() {
           </span>
         </Link>
 
-        <Link href="/works">
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.68rem",
-              color: "rgba(255,255,255,0.5)",
-              textDecoration: "none",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              transition: "color 0.2s",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLSpanElement).style.color = "rgba(255,255,255,0.9)")}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLSpanElement).style.color = "rgba(255,255,255,0.5)")}
-          >
-            ALL WORKS
-          </span>
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <Link href="/works">
+            <span
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.68rem",
+                color: "rgba(255,255,255,0.5)",
+                textDecoration: "none",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                transition: "color 0.2s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLSpanElement).style.color = "rgba(255,255,255,0.9)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLSpanElement).style.color = "rgba(255,255,255,0.5)")}
+            >
+              {text(language, "ALL WORKS", "전체 작업")}
+            </span>
+          </Link>
+          <LanguageToggle variant="dark" />
+        </div>
       </header>
 
       {/* Hero image */}
@@ -156,7 +161,7 @@ export default function WorkDetail() {
       >
         <img
           src={(work as any).img}
-          alt={(work as any).title}
+          alt={pick(work, "title", language)}
           style={{
             width: "100%",
             height: "100%",
@@ -210,7 +215,7 @@ export default function WorkDetail() {
             textTransform: "uppercase",
           }}
         >
-          {(work as any).status}
+          {pick(work, "status", language)}
         </div>
       </div>
 
@@ -238,7 +243,7 @@ export default function WorkDetail() {
               marginBottom: "1rem",
             }}
           >
-            {(work as any).tag}
+            {pick(work, "tag", language) ?? tagText((work as any).tag, language)}
           </div>
           <h1
             style={{
@@ -251,7 +256,7 @@ export default function WorkDetail() {
               letterSpacing: "-0.02em",
             }}
           >
-            {(work as any).title}
+            {pick(work, "title", language)}
           </h1>
           <p
             style={{
@@ -262,7 +267,7 @@ export default function WorkDetail() {
               opacity: 0.75,
             }}
           >
-            {(work as any).subtitle}
+            {pick(work, "subtitle", language)}
           </p>
         </div>
 
@@ -289,7 +294,7 @@ export default function WorkDetail() {
                 letterSpacing: "0.04em",
               }}
             >
-              {(work as any).date}
+              {pick(work, "date", language)}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -302,7 +307,7 @@ export default function WorkDetail() {
                 letterSpacing: "0.04em",
               }}
             >
-              {(work as any).area}
+              {pick(work, "area", language)}
             </span>
           </div>
           {(work as any).collab && (
@@ -316,7 +321,7 @@ export default function WorkDetail() {
                   letterSpacing: "0.04em",
                 }}
               >
-                {(work as any).collab}
+                {pick(work, "collab", language)}
               </span>
             </div>
           )}
@@ -346,9 +351,9 @@ export default function WorkDetail() {
                 marginBottom: "1rem",
               }}
             >
-              OVERVIEW
+              {text(language, "OVERVIEW", "개요")}
             </h2>
-            {((work as any).longDesc || "").split("\n\n").map((para: string, i: number) => (
+            {(pick<string>(work, "longDesc", language) || "").split("\n\n").map((para: string, i: number) => (
               <p
                 key={i}
                 style={{
@@ -378,7 +383,7 @@ export default function WorkDetail() {
                 marginBottom: "1rem",
               }}
             >
-              KEY POINTS
+              {text(language, "KEY POINTS", "핵심 포인트")}
             </h2>
             <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {highlights.map((h: string, i: number) => (
@@ -425,7 +430,7 @@ export default function WorkDetail() {
                   marginBottom: "0.75rem",
                 }}
               >
-                KEYWORDS
+                {text(language, "KEYWORDS", "키워드")}
               </h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem" }}>
                 {keywords.map((kw: string) => (
@@ -470,7 +475,7 @@ export default function WorkDetail() {
               textTransform: "uppercase",
             }}
           >
-            RESEARCHER NOTE
+            {text(language, "RESEARCHER NOTE", "연구자 노트")}
           </div>
           <p
             style={{
@@ -481,7 +486,7 @@ export default function WorkDetail() {
               fontStyle: "italic",
             }}
           >
-            "{(work as any).desc}"
+            &quot;{pick(work, "desc", language)}&quot;
           </p>
           <div
             style={{
@@ -538,7 +543,7 @@ export default function WorkDetail() {
                     marginBottom: "0.4rem",
                   }}
                 >
-                  ← Previous
+                  ← {text(language, "Previous", "이전")}
                 </div>
                 <div
                   style={{
@@ -548,7 +553,7 @@ export default function WorkDetail() {
                     color: "#1a1410",
                   }}
                 >
-                  {(prevWork as any).title}
+                  {pick(prevWork, "title", language)}
                 </div>
               </div>
             </Link>
@@ -588,7 +593,7 @@ export default function WorkDetail() {
                     marginBottom: "0.4rem",
                   }}
                 >
-                  Next →
+                  {text(language, "Next", "다음")} →
                 </div>
                 <div
                   style={{
@@ -598,7 +603,7 @@ export default function WorkDetail() {
                     color: "#1a1410",
                   }}
                 >
-                  {(nextWork as any).title}
+                  {pick(nextWork, "title", language)}
                 </div>
               </div>
             </Link>
