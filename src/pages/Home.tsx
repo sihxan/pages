@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { ArrowRight, Mail, Github, ExternalLink, Star } from "lucide-react";
+import { ArrowRight, Mail, Github, ExternalLink, Star, ChevronDown } from "lucide-react";
 import {
   fallbackAchievements,
   fallbackEducation,
@@ -596,10 +596,10 @@ function AboutSection({ person }: { person: any }) {
             }}
           >
             <a
-              href="#/contact"
+              href="#/notes"
               onClick={(e) => {
                 e.preventDefault();
-                const target = document.getElementById("contact");
+                const target = document.getElementById("notes");
                 if (!target) return;
                 const navOffset = 72;
                 const top = target.getBoundingClientRect().top + window.scrollY - navOffset;
@@ -725,6 +725,22 @@ function ResearchSection({
   researchInterests: any[];
   person: any;
 }) {
+  const [openExperienceIds, setOpenExperienceIds] = useState<Set<number>>(
+    () => new Set()
+  );
+
+  const toggleExperience = (index: number) => {
+    setOpenExperienceIds((current) => {
+      const next = new Set(current);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
+
   return (
     <section
       id="notes"
@@ -736,7 +752,7 @@ function ResearchSection({
     >
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <div
-          className="reveal"
+          className="reveal research-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1.6fr",
@@ -760,80 +776,141 @@ function ResearchSection({
               EXPERIENCE
             </h2>
 
-            {experience.map((exp: any, i: number) => (
-              <div key={i} style={{ marginBottom: "2rem" }}>
+            {experience.map((exp: any, i: number) => {
+              const isOpen = openExperienceIds.has(i);
+
+              return (
                 <div
+                  key={i}
                   style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "0.9rem",
-                    fontWeight: 600,
-                    color: "#1a1410",
-                    marginBottom: "0.2rem",
+                    marginBottom: "0.75rem",
+                    borderTop: "1px solid rgba(26,20,16,0.12)",
+                    paddingTop: "0.9rem",
                   }}
                 >
-                  {exp.role}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.72rem",
-                    color: "#1a3a8f",
-                    marginBottom: "0.15rem",
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  {exp.url ? (
-                    <a
-                      href={exp.url}
-                      target="_blank"
-                      rel="noreferrer"
+                  <button
+                    type="button"
+                    aria-expanded={isOpen}
+                    aria-controls={`experience-detail-${i}`}
+                    onClick={() => toggleExperience(i)}
+                    style={{
+                      width: "100%",
+                      background: "transparent",
+                      border: "none",
+                      padding: 0,
+                      display: "flex",
+                      alignItems: "flex-start",
+                      justifyContent: "space-between",
+                      gap: "1rem",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      outlineOffset: "0.35rem",
+                    }}
+                  >
+                    <span
                       style={{
-                        color: "inherit",
-                        textDecoration: "none",
-                        borderBottom: "1px solid rgba(26,58,143,0.35)",
+                        minWidth: 0,
                       }}
                     >
-                      {exp.org}
-                    </a>
-                  ) : (
-                    exp.org
+                      <span
+                        style={{
+                          display: "block",
+                          fontFamily: "var(--font-display)",
+                          fontSize: "0.9rem",
+                          fontWeight: 600,
+                          color: "#1a1410",
+                          marginBottom: "0.2rem",
+                        }}
+                      >
+                        {exp.role}
+                      </span>
+                      <span
+                        style={{
+                          display: "block",
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "0.72rem",
+                          color: "#1a3a8f",
+                          marginBottom: "0.15rem",
+                          letterSpacing: "0.02em",
+                        }}
+                      >
+                        {exp.org}
+                      </span>
+                      <span
+                        style={{
+                          display: "block",
+                          fontFamily: "var(--font-mono)",
+                          fontSize: "0.65rem",
+                          color: "#3a3028",
+                          opacity: 0.55,
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        {exp.period}
+                      </span>
+                    </span>
+                    <ChevronDown
+                      size={18}
+                      aria-hidden="true"
+                      style={{
+                        color: "#1a3a8f",
+                        flexShrink: 0,
+                        marginTop: "0.2rem",
+                        transition: "transform 0.2s ease",
+                        transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      }}
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div id={`experience-detail-${i}`} style={{ paddingTop: "0.85rem" }}>
+                      {exp.url && (
+                        <a
+                          href={exp.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "0.25rem",
+                            fontFamily: "var(--font-mono)",
+                            fontSize: "0.65rem",
+                            color: "#1a3a8f",
+                            textDecoration: "none",
+                            marginBottom: "0.65rem",
+                            borderBottom: "1px solid rgba(26,58,143,0.35)",
+                          }}
+                        >
+                          Visit {exp.org}
+                          <ExternalLink size={11} aria-hidden="true" />
+                        </a>
+                      )}
+                      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                        {(Array.isArray(exp.activities) ? exp.activities as string[] : []).map((act: string, j: number) => (
+                          <li
+                            key={j}
+                            style={{
+                              fontFamily: "var(--font-mono)",
+                              fontSize: "0.72rem",
+                              color: "#3a3028",
+                              lineHeight: 1.65,
+                              paddingBottom: "0.4rem",
+                              marginBottom: "0.4rem",
+                              display: "flex",
+                              gap: "0.5rem",
+                              alignItems: "flex-start",
+                            }}
+                          >
+                            <span style={{ color: "#1a3a8f", flexShrink: 0, marginTop: "0.1rem" }}>—</span>
+                            {act}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.65rem",
-                    color: "#3a3028",
-                    opacity: 0.55,
-                    marginBottom: "1rem",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  {exp.period}
-                </div>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {(Array.isArray(exp.activities) ? exp.activities as string[] : []).map((act: string, j: number) => (
-                    <li
-                      key={j}
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "0.72rem",
-                        color: "#3a3028",
-                        lineHeight: 1.65,
-                        paddingBottom: "0.4rem",
-                        marginBottom: "0.4rem",
-                        display: "flex",
-                        gap: "0.5rem",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <span style={{ color: "#1a3a8f", flexShrink: 0, marginTop: "0.1rem" }}>—</span>
-                      {act}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Education */}
             <div style={{ marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(26,20,16,0.1)" }}>
@@ -974,29 +1051,47 @@ function ResearchSection({
             <div
               style={{
                 backgroundColor: "#0a1628",
-                padding: "1.75rem 2rem",
-                position: "relative",
+                borderLeft: "4px solid #1a3a8f",
+                padding: "1.35rem 1.5rem 1.45rem",
               }}
             >
               <div
                 style={{
-                  position: "absolute",
-                  top: "1rem",
-                  right: "1.25rem",
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.55rem",
-                  color: "rgba(255,255,255,0.2)",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: "1rem",
+                  marginBottom: "1rem",
                 }}
               >
-                RESEARCH IDENTITY
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.58rem",
+                    color: "rgba(255,255,255,0.55)",
+                    letterSpacing: "0.14em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  RESEARCH IDENTITY
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.55rem",
+                    color: "rgba(255,255,255,0.28)",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  FIELD STATEMENT
+                </span>
               </div>
               <p
                 style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.78rem",
-                  color: "rgba(255,255,255,0.72)",
+                  fontSize: "0.76rem",
+                  color: "rgba(255,255,255,0.76)",
                   lineHeight: 1.85,
                   fontStyle: "italic",
                   margin: 0,
