@@ -485,6 +485,7 @@ function AboutSection({ person }: { person: any }) {
   return (
     <section id="about" style={{ backgroundColor: "#e8e0d0" }}>
       <div
+        className="about-grid"
         style={{
           display: "grid",
           gridTemplateColumns: "minmax(280px, 1fr) minmax(320px, 1.5fr)",
@@ -595,7 +596,15 @@ function AboutSection({ person }: { person: any }) {
             }}
           >
             <a
-              href="#contact"
+              href="#/contact"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById("contact");
+                if (!target) return;
+                const navOffset = 72;
+                const top = target.getBoundingClientRect().top + window.scrollY - navOffset;
+                window.scrollTo({ top, behavior: "smooth" });
+              }}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.7rem",
@@ -685,16 +694,14 @@ function AboutSection({ person }: { person: any }) {
           </p>
 
           {/* Film strip */}
-          <div style={{ overflow: "hidden", border: "1px solid rgba(26,20,16,0.12)" }}>
+          <div style={{ border: "1px solid rgba(26,20,16,0.12)" }}>
             <img
               src={IMG_FILM_STRIP}
               alt="Field notes film strip"
               style={{
                 display: "block",
                 width: "100%",
-                height: "110px",
-                objectFit: "cover",
-                objectPosition: "center 30%",
+                height: "auto",
               }}
             />
           </div>
