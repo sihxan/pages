@@ -55,6 +55,34 @@ export const EXPERIENCE = [
       "Collaborating in lab seminars and technical discussions",
     ],
   },
+  {
+    role: "Student Council Member",
+    org: "School of Computing, Kyung Hee University",
+    period: "January 2025 – December 2025",
+    activities: [
+      "Served as a member of the student council for the School of Computing",
+      "Supported student-facing events, communication, and school-level operations",
+    ],
+  },
+  {
+    role: "Startup Member / AI Service Development",
+    org: "Allmize",
+    url: "https://allmize.com",
+    period: "February 2025 – August 2025",
+    activities: [
+      "Participated in AI technology development and service implementation",
+      "Contributed to building and improving the Allmize service as an early startup member",
+    ],
+  },
+  {
+    role: "KHUDA 2nd Member",
+    org: "KHUDA, Data Analysis Club, Kyung Hee University",
+    period: "July 2022 – January 2023",
+    activities: [
+      "Active in KHUDA 2nd, the data analysis club at Kyung Hee University",
+      "Studied data analysis workflows and practiced project-based analytics",
+    ],
+  },
 ];
 
 export const ACHIEVEMENTS = [

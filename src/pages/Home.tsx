@@ -757,7 +757,7 @@ function ResearchSection({
                 marginBottom: "1.75rem",
               }}
             >
-              RESEARCH EXPERIENCE
+              EXPERIENCE
             </h2>
 
             {experience.map((exp: any, i: number) => (
@@ -782,7 +782,22 @@ function ResearchSection({
                     letterSpacing: "0.02em",
                   }}
                 >
-                  {exp.org}
+                  {exp.url ? (
+                    <a
+                      href={exp.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        color: "inherit",
+                        textDecoration: "none",
+                        borderBottom: "1px solid rgba(26,58,143,0.35)",
+                      }}
+                    >
+                      {exp.org}
+                    </a>
+                  ) : (
+                    exp.org
+                  )}
                 </div>
                 <div
                   style={{
