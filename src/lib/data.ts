@@ -13,7 +13,7 @@ export const PERSON = {
   lab: "KDST Lab",
   labFull: "KDST Lab — Deep Learning Research Lab",
   location: "Suwon, South Korea",
-  email: "sihwan@khu.ac.kr",
+  email: "shani03@khu.ac.kr",
   github: "https://github.com/",
   heroLine: "I study how models learn, fail, and generalize through experiments.",
   heroCopy: [
@@ -138,7 +138,7 @@ export const WORKS: Work[] = [
   {
     id: "02",
     slug: "dataset-distillation",
-    title: "Dataset Distillation Study",
+    title: "Dataset Distillation Research",
     subtitle: "How compact datasets preserve learning signals",
     desc: "Independent research on how compact or synthetic datasets preserve the learning signal of larger datasets.",
     longDesc: `Dataset Distillation asks a fundamental question: can we compress a large dataset into a small synthetic set such that models trained on the distilled data perform comparably to those trained on the full dataset?\n\nThis independent research project explores the theoretical foundations and practical implementations of dataset distillation methods, including distribution matching, trajectory matching, and gradient-based approaches.\n\nThe work focuses on understanding what information is truly necessary for a model to generalize — and what can be discarded without meaningful loss of performance.`,
