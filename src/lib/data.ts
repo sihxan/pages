@@ -94,6 +94,7 @@ export const ACHIEVEMENTS = [
     title: "Grand Prize, 2nd Place",
     event: "2023 Defense AI Competition, General Track",
     year: "2023",
+    url: "https://maicon.kr/지난-대회/",
   },
   {
     title: "ADsP Certification",

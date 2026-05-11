@@ -976,17 +976,40 @@ function ResearchSection({
               </h3>
               {achievements.map((ach: any, i: number) => (
                 <div key={i} style={{ marginBottom: "0.75rem" }}>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "0.82rem",
-                      fontWeight: 600,
-                      color: "#1a1410",
-                      marginBottom: "0.1rem",
-                    }}
-                  >
-                    {ach.title}
-                  </div>
+                  {ach.url ? (
+                    <a
+                      href={ach.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.25rem",
+                        fontFamily: "var(--font-display)",
+                        fontSize: "0.82rem",
+                        fontWeight: 600,
+                        color: "#1a1410",
+                        marginBottom: "0.1rem",
+                        textDecoration: "none",
+                        borderBottom: "1px solid rgba(26,20,16,0.25)",
+                      }}
+                    >
+                      {ach.title}
+                      <ExternalLink size={11} aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <div
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "0.82rem",
+                        fontWeight: 600,
+                        color: "#1a1410",
+                        marginBottom: "0.1rem",
+                      }}
+                    >
+                      {ach.title}
+                    </div>
+                  )}
                   <div
                     style={{
                       fontFamily: "var(--font-mono)",
