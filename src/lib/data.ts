@@ -60,8 +60,9 @@ export const EXPERIENCE = [
     org: "School of Computing, Kyung Hee University",
     period: "January 2025 – December 2025",
     activities: [
-      "Served as a member of the student council for the School of Computing",
-      "Supported student-facing events, communication, and school-level operations",
+      "Proposed and managed partnership opportunities with multiple vendors and external companies",
+      "Planned and operated student-facing events for the School of Computing",
+      "Coordinated communication between students, school offices, and partner organizations",
     ],
   },
   {
@@ -70,8 +71,9 @@ export const EXPERIENCE = [
     url: "https://allmize.com",
     period: "February 2025 – August 2025",
     activities: [
-      "Participated in AI technology development and service implementation",
-      "Contributed to building and improving the Allmize service as an early startup member",
+      "Built AI service features including RAG-based workflows and application logic",
+      "Reviewed service direction and proposed product and technical improvements",
+      "Participated in AI feature development and service implementation as an early startup member",
     ],
   },
   {
@@ -79,8 +81,9 @@ export const EXPERIENCE = [
     org: "KHUDA, Data Analysis Club, Kyung Hee University",
     period: "July 2022 – January 2023",
     activities: [
-      "Active in KHUDA 2nd, the data analysis club at Kyung Hee University",
-      "Studied data analysis workflows and practiced project-based analytics",
+      "Studied foundational machine learning and deep learning concepts",
+      "Built a book recommendation system through a recommendation systems project",
+      "Conducted an NLP project for profanity detection and masking",
     ],
   },
 ];
