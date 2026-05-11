@@ -50,6 +50,13 @@ function Nav({ nameEn }: { nameEn: string }) {
 
   const navItems = ["WORKS", "ABOUT", "NOTES", "LAB", "CONTACT"];
   const parts = nameEn.split(" ");
+  const scrollToSection = (sectionId: string) => {
+    const target = document.getElementById(sectionId);
+    if (!target) return;
+    const navOffset = 72;
+    const top = target.getBoundingClientRect().top + window.scrollY - navOffset;
+    window.scrollTo({ top, behavior: "smooth" });
+  };
 
   return (
     <nav
@@ -62,7 +69,11 @@ function Nav({ nameEn }: { nameEn: string }) {
       }}
     >
       <a
-        href="#"
+        href="#/"
+        onClick={(e) => {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
         style={{
           fontFamily: "var(--font-display)",
           color: "white",
@@ -83,7 +94,11 @@ function Nav({ nameEn }: { nameEn: string }) {
         {navItems.map((item) => (
           <a
             key={item}
-            href={`#${item.toLowerCase()}`}
+            href={`#/${item.toLowerCase()}`}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection(item.toLowerCase());
+            }}
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "0.7rem",
@@ -133,8 +148,12 @@ function Nav({ nameEn }: { nameEn: string }) {
           {navItems.map((item) => (
             <a
               key={item}
-              href={`#${item.toLowerCase()}`}
-              onClick={() => setMenuOpen(false)}
+              href={`#/${item.toLowerCase()}`}
+              onClick={(e) => {
+                e.preventDefault();
+                setMenuOpen(false);
+                scrollToSection(item.toLowerCase());
+              }}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "0.75rem",
