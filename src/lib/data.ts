@@ -100,6 +100,11 @@ export const ACHIEVEMENTS = [
     event: "Advanced Data Analytics Semi-Professional, Korea Data Agency",
     year: "2024",
   },
+  {
+    title: "Top Excellence Award",
+    event: "2024-2 Intellectual Property Creation Patent Camp",
+    year: "October 2024",
+  },
 ];
 
 export const RESEARCH_INTERESTS = [
